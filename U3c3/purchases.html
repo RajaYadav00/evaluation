@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="purchases">
+      <!--SHOW ALL YOUR PURCHASES HERE-->
+    </div>
+  </body>
+</html>
+
+<script>
+  //WRITE YOUR LOGIC HERE
+
+  let purchases=JSON.parse(localStorage.getItem("purchases"));
+ console.log(purchases)
+  let container=document.getElementById("purchases")
+  function append(purchases){
+
+    container.innerHTML=null;
+
+    purchases.map(function(el){
+      let div=document.createElement("div");
+
+        let pic=document.createElement("img");
+
+        pic.src=el.image;
+
+        let name=document.createElement("p");
+
+        name.innerText=el.name;
+
+        let price=document.createElement("p");
+
+        price.innerText=el.price;
+
+        div.append(pic,name,price)
+
+        container.append(div)
+    })
+
+  }
+  append(purchases)
+</script>

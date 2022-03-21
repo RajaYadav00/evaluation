@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #main{
+        display: grid;
+
+        grid-template-columns: repeat(4,1fr);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h3 id="wallet">
+        <!--SHOW CURRENT WALLET VALUE HERE, ONLY THE NUMBER SHOULD BE VISIBLE-->
+      </h3>
+    </div>
+
+    <div id="main">
+      <!--SHOW ALL THE VOUCEHRS DATA FROM API HERE( IMAGE, NAME AND PRICE)-->
+    </div>
+  </body>
+</html>
+
+<script type="module">
+  //WRITE YOUR LOGIC HERE
+  
+  let amount=localStorage.getItem("wallet")
+  document.getElementById("wallet").innerHTML=amount;
+
+
+let container=document.getElementById("main");
+
+  async function getdata(){
+    try {
+      let res=await fetch(`https://masai-vouchers-api.herokuapp.com/api/vouchers`)
+
+      let data=await res.json();
+      append(data[0].vouchers)
+      console.log(data[0].vouchers)
+
+      
+    } catch (error) {
+      console.log("my error",error)
+    }
+
+  }
+
+  function append(data){
+   
+    document.getElementById("wallet").innerHTML=amount;
+     container.innerHTML=null;
+
+     data.forEach(function(el,index){
+
+        let div=document.createElement("div");
+
+        let pic=document.createElement("img");
+
+        pic.src=el.image;
+
+        let name=document.createElement("p");
+        
+        name.innerText=el.name;
+
+        let price=document.createElement("p");
+
+        price.innerText=el.price;
+
+        let buybtn=document.createElement("button")
+              buybtn.innerText="Buy"
+        buybtn.setAttribute("id","buy")
+        
+        buybtn.addEventListener("click",function(index){
+
+
+            let arr=JSON.parse(localStorage.getItem("purchases"))||[];
+             arr.push(el)
+
+            localStorage.setItem("purchases",JSON.stringify(arr))
+
+
+
+            // price 
+            
+            let sum=el.price;
+
+            console.log(sum)
+            let amount=localStorage.getItem("wallet")
+
+            let value=+amount
+            console.log(value)
+             
+            let newsum= value-sum;
+
+            if(el.price>value){
+              alert(" In sufficeant ammount")
+            }
+
+            localStorage.setItem("wallet",newsum)
+           
+            document.getElementById("wallet").innerHTML=amount;
+        })
+
+
+        
+        div.append(pic,name,price,buybtn)
+
+        container.append(div)
+
+     })
+
+  }
+
+  getdata()
+  
+
+</script>
